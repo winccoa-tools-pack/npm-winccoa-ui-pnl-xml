@@ -1,15 +1,20 @@
 # Project Plan: WinCC OA UI PNL/XML Converter
 
 ## Overview
-This project aims to develop a lightweight developer tool for SIMATIC WinCC Open Architecture projects, providing reliable PNL ⇄ XML transformations for UI panels. The tool will be part of the modular winccoa-tools-pack ecosystem.
+
+This project aims to develop a lightweight developer tool for SIMATIC WinCC Open Architecture projects,
+providing reliable PNL ⇄ XML transformations for UI panels.
+The tool will be part of the modular winccoa-tools-pack ecosystem.
 
 ## Goals
+
 - Provide seamless conversion between .pnl and .xml formats for WinCC OA UI panels
 - Enable integration with modern development tools and CI/CD pipelines
 - Ensure high reliability and performance for engineering workflows
 - Maintain consistency with the winccoa-tools-pack organization standards
 
 ## Features to Implement
+
 1. **PNL → XML Conversion**
    - Parse .pnl files and convert to structured XML
    - Handle various panel elements and properties
@@ -36,18 +41,20 @@ This project aims to develop a lightweight developer tool for SIMATIC WinCC Open
    - Ecosystem integration with other winccoa-tools-pack libraries
 
 ## Implementation Details
+
 - **Core Technology**: Utilize WinCC OA UI Manager for conversions
 - **Component**: UIComponent from npm-winccoa-core
-- **Options**: 
+- **Options**:
   - `-xmlConvert[=XML|PNL]` for conversion direction
   - `-p <panel>|<startDir>` for input specification
   - `-o` for overwrite existing panels
   - `-n` for no connection to WCCIL event
-- **Dependencies**: 
-  - https://github.com/winccoa-tools-pack/npm-winccoa-core
+- **Dependencies**:
+  - <https://github.com/winccoa-tools-pack/npm-winccoa-core>
 
 ## Development Phases
-1. **Phase 1: Core Conversion Logic**
+
+1. **Phase 1: Core Conversion Logic** (done)
    - Implement basic PNL to XML conversion
    - Implement basic XML to PNL conversion
    - Unit testing for conversion accuracy
@@ -73,6 +80,7 @@ This project aims to develop a lightweight developer tool for SIMATIC WinCC Open
    - Release to NPM registry
 
 ## Timeline
+
 - **Week 1-2**: Core conversion logic implementation
 - **Week 3**: CLI interface development
 - **Week 4**: API development and testing
@@ -80,12 +88,14 @@ This project aims to develop a lightweight developer tool for SIMATIC WinCC Open
 - **Week 6**: Final testing, release preparation
 
 ## Risks and Mitigation
+
 - **Dependency on WinCC OA**: Ensure proper version compatibility and licensing
 - **Complex File Formats**: Thorough testing with various panel types
 - **Performance**: Optimize for large panel files
 - **Community Adoption**: Focus on documentation and ecosystem integration
 
 ## Success Criteria
+
 - Successful conversion of complex panel files
 - Integration with at least one VS Code extension
 - Positive feedback from WinCC OA developers
