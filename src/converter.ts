@@ -12,12 +12,21 @@ const DEFAULT_TIMEOUT = 60_000;
  * Uses the WinCC OA UI manager (`WCCOAui`) under the hood to perform
  * conversions via the `-xmlConvert` flag.
  *
+ * **Important:** WCCOAui converts files **in-place**.  A `.bak` backup of the
+ * original content is created next to the input file, and the file itself is
+ * rewritten with the converted content.
+ *
+ * The `inputPath` used with `-p` is resolved **relative to the project's
+ * `panels/` directory**, so pass a bare filename (e.g. `"about.pnl"`)
+ * rather than an absolute path.
+ *
  * @example
  * ```ts
  * const converter = new PnlXmlConverter();
  * const result = await converter.convert({
  *     version: '3.20',
- *     inputPath: 'panels/myPanel.pnl',
+ *     inputPath: 'myPanel.pnl',
+ *     configPath: '/path/to/project/config/config',
  * }, ConversionDirection.PNL_TO_XML);
  * ```
  */
@@ -48,6 +57,11 @@ export class PnlXmlConverter {
         // Overwrite existing output files
         if (options.overwrite) {
             args.push('-o');
+        }
+
+        // Project config path
+        if (options.configPath) {
+            args.push('-config', options.configPath);
         }
 
         // Do not connect to WCCILevent

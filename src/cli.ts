@@ -27,6 +27,7 @@ function printUsage(): void {
             '',
             'Options:',
             '  -v, --version <ver>   WinCC OA version (e.g. 3.20)  [required]',
+            '  -c, --config <path>   WinCC OA project config file',
             '  -o, --overwrite       Overwrite existing output files',
             '  -t, --timeout <ms>    Process timeout in milliseconds (default: 60000)',
             '  -h, --help            Show this help message',
@@ -48,6 +49,7 @@ interface ParsedArgs {
     direction: ConversionDirection;
     inputPath: string;
     version: string;
+    configPath?: string;
     overwrite: boolean;
     timeout?: number;
 }
@@ -87,6 +89,7 @@ function parseArgs(argv: string[]): ParsedArgs | null {
     }
 
     let version = '';
+    let configPath: string | undefined;
     let overwrite = false;
     let timeout: number | undefined;
 
@@ -98,6 +101,10 @@ function parseArgs(argv: string[]): ParsedArgs | null {
             case '-v':
             case '--version':
                 version = args[++i] ?? '';
+                break;
+            case '-c':
+            case '--config':
+                configPath = args[++i] ?? '';
                 break;
             case '-o':
             case '--overwrite':
@@ -126,7 +133,7 @@ function parseArgs(argv: string[]): ParsedArgs | null {
         return null;
     }
 
-    return { direction, inputPath, version, overwrite, timeout };
+    return { direction, inputPath, version, configPath, overwrite, timeout };
 }
 
 /**
@@ -144,6 +151,7 @@ async function main(): Promise<void> {
     const options: ConversionOptions = {
         version: parsed.version,
         inputPath: parsed.inputPath,
+        configPath: parsed.configPath,
         overwrite: parsed.overwrite,
         timeout: parsed.timeout,
     };
