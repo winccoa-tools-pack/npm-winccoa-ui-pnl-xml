@@ -1,103 +1,65 @@
-# NPM Shared Library Template
+# WinCC OA UI PNL/XML Converter
 
-Minimal starter template for creating shared npm libraries with Git Flow workflow.
+A lightweight developer tool for SIMATIC WinCC Open Architecture projects, providing reliable PNL ⇄ XML transformations for UI panels.
+This package is part of the modular winccoa-tools-pack ecosystem, which delivers modern development tooling, reusable libraries, and VS Code extensions for WinCC OA engineers. [github.com](https://github.com/winccoa-tools-pack)
 
-## 🚀 Quick Start
+## ✨ Features
 
-### Initial Setup
+- **PNL → XML conversion**  
+  Transform classic .pnl UI panel files into structured XML suitable for analysis, automation, and editor tooling.
 
-1. **Create repository from this template**
+- **XML → PNL conversion**  
+  Regenerate WinCC OA .pnl files from XML to enable round-trip workflows and external processing.
 
-   ```bash
-   # Via GitHub CLI
-   gh repo create winccoa-tools-pack/<your-library-name> \
-     --template winccoa-tools-pack/template-npm-shared-library \
-     --public
-   ```
+- **Tooling-friendly design**  
+  Built to integrate with next-generation WinCC OA development tools such as VS Code extensions, reusable workflows, and advanced analysis pipelines, consistent with the overall goals of the winccoa-tools-pack organization.
 
-2. **Clone and initialize Git Flow**
+- **Modern project template**  
+  Generated from the shared npm-winccoa-template to ensure consistent structure, CI/CD, TypeScript setup, linting, and maintainability across the ecosystem.
 
-   ```bash
-   git clone https://github.com/winccoa-tools-pack/<your-library-name>
-   cd <your-library-name>
+## 📦 Installation
 
-   # Initialize Git Flow locally (if you use the git-flow tool)
-   git flow init -d
-   git push -u origin develop
-   ```
-
-3. **Install dependencies and build**
-
-   ```bash
-   npm install
-   npm run build
-   npm test
-   ```
-
-## 🌳 Git Flow Workflow
-
-This template uses [Git Flow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow) for branch management:
-
-### Branch Structure
-- **`main`** - Production-ready code (stable releases)
-- **`develop`** - Integration branch (pre-release features)
-- **`feature/*`** - New features
-- **`release/*`** - Release preparation
-- **`hotfix/*`** - Emergency fixes for production
-
-### Common Commands
-
-```bash
-# Start a new feature
-git flow feature start my-feature
-
-# Finish feature (merges to develop)
-git flow feature finish my-feature
-
-# Start a release
-git flow release start 1.0.0
-
-# Finish release (merges to main and develop, creates tag)
-git flow release finish 1.0.0
-
-# Hotfix for production
-git flow hotfix start 1.0.1
-git flow hotfix finish 1.0.1
+```shell
+npm install @winccoa-tools-pack/npm-winccoa-ui-pnl-xml
 ```
 
-### Branch Protection
+Or globally:
 
-The `setup-gitflow.ps1` script applies protection rules:
-- **main**: Requires PR reviews, status checks, no force pushes
-- **develop**: Requires PR reviews, status checks, allows force pushes (for rebasing)
+```shell
+npm install -g @winccoa-tools-pack/npm-winccoa-ui-pnl-xml
+```
 
-## 🔐 NPM Publishing Setup
+## 🖥 Usage (CLI)
 
-To enable automatic publishing to the NPM registry when creating releases, you need to configure an NPM access token:
+```shell
+# Convert .pnl → .xml
+winccoa-pnl-xml convert pnl-to-xml path/to/panel.pnl -o out/panel.xml
 
-### Why NPM_TOKEN is Required
+# Convert .xml → .pnl
+winccoa-pnl-xml convert xml-to-pnl path/to/panel.xml -o out/panel.pnl
+```
 
-The `release.yml` workflow automatically publishes your package to NPM when you merge a release PR to `main`. This requires authentication with the NPM registry.
+## 🧩 Usage (API)
 
-### How to Get an NPM Access Token
+```typescript
+import { pnlToXml, xmlToPnl } from "@winccoa-tools-pack/npm-winccoa-ui-pnl-xml";
 
-1. **Log in to NPM**
-   - Go to [npmjs.com](https://www.npmjs.com/) and sign in (or create an account)
+const result = await pnlToXml("panel.pnl");
+console.log(result.output);
+```
 
-2. **Generate Access Token**
-   - Navigate to **Access Tokens** in your account settings: https://www.npmjs.com/settings/~/tokens
-   - Click **"Generate New Token"** → Select **"Automation"** type
-   - Copy the generated token (you won't see it again!)
+## 📚 Ecosystem Integration
 
-3. **Add Token to Repository**
-   - Go to your GitHub repository settings
-   - Navigate to **Settings** → **Secrets and variables** → **Actions**
-   - Click **"New repository secret"**
-   - Name: `NPM_TOKEN`
-   - Value: Paste your NPM access token
-   - Click **"Add secret"**
+This package is designed for seamless use with:
 
-### Token Permissions
+- **VS Code extensions for WinCC OA development**  
+  Our open source community provides multiple VS Code tools that enhance the engineering workflow for WinCC OA developers. This converter acts as a foundation for UI-related features such as the Panel Explorer.
+
+- **Node.js libraries**  
+  Works side-by-side with other libraries in the winccoa-tools-pack suite (project management, core utilities, testing, etc.).
+
+- **CI/CD automation**  
+  Ideal for pipelines needing validation or transformation of UI panel resources.
 
 - **Automation tokens** are recommended for CI/CD (they don't expire but can be revoked)
 - The token needs **publish** permission for your package scope
