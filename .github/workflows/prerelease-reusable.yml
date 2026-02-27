@@ -116,7 +116,7 @@ jobs:
         run: npm publish --tag next --access public --ignore-scripts
 
       - name: Upload npm tarball artifact
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ format('pre-release-{0}', github.sha) }}
           path: "*.tgz"
