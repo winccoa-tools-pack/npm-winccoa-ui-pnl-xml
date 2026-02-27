@@ -47,7 +47,7 @@ This project aims to develop a lightweight developer tool for SIMATIC WinCC Open
   - https://github.com/winccoa-tools-pack/npm-winccoa-core
 
 ## Development Phases
-1. **Phase 1: Core Conversion Logic**
+1. **Phase 1: Core Conversion Logic** (done)
    - Implement basic PNL to XML conversion
    - Implement basic XML to PNL conversion
    - Unit testing for conversion accuracy
