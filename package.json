@@ -24,6 +24,9 @@
       "types": "./dist/types/*.d.ts"
     }
   },
+  "bin": {
+    "winccoa-pnl-xml": "./dist/cjs/cli.js"
+  },
   "files": [
     "dist"
   ],

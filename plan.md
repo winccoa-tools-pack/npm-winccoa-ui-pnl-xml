@@ -59,7 +59,7 @@ The tool will be part of the modular winccoa-tools-pack ecosystem.
    - Implement basic XML to PNL conversion
    - Unit testing for conversion accuracy
 
-2. **Phase 2: CLI Development**
+2. **Phase 2: CLI Development** (done)
    - Build command-line interface
    - Add file I/O handling
    - Implement error reporting
