@@ -15,18 +15,19 @@ allow_auto_merge: true
 
 delete_branch_on_merge: true
 
+# max 20 topics allowed, but let's keep it relevant and not just add buzzwords
 topics:
   - winccoa
   - wincc-oa
-  - automation
   - scada
   - hmi
+  - automation
   - industrial-automation
-  - Siemens
-  - ETM
-  - NPM
-  - winccoa-NPM
-  - winccoa-NPM-UI
+  - siemens
+  - etm
+  - npm
+  - winccoa-npm
+  - winccoa-npm-ui
   - winccoa-ui
   - winccoa-ui-pnl-xml
   - pnl-xml
@@ -35,8 +36,6 @@ topics:
   - xml-pnl
   - winccoa-panel-xml
   - winccoa-pnl-xml
-  - winccoa-ui-panel-xml
-  - winccoa-ui-pnl-xml
   - winccoa-tools-pack
 
 security:
