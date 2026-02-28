@@ -49,11 +49,22 @@ jobs:
   create:
     runs-on: ubuntu-latest
     steps:
+      - name: Validate REPO_ADMIN_TOKEN is configured
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -z "${{ secrets.REPO_ADMIN_TOKEN }}" ]; then
+            echo "::error::Missing required secret REPO_ADMIN_TOKEN."
+            echo "::error::This repo/org does not allow PR creation using the default GITHUB_TOKEN."
+            echo "::error::Add a PAT as repository secret 'REPO_ADMIN_TOKEN' with permissions to create branches and pull requests, then rerun this workflow."
+            exit 1
+          fi
+
       - name: Create branch (release/hotfix)
         id: branch
         uses: actions/github-script@v8
         with:
-          github-token: ${{ secrets.REPO_ADMIN_TOKEN != '' && secrets.REPO_ADMIN_TOKEN || github.token }}
+          github-token: ${{ secrets.REPO_ADMIN_TOKEN }}
           script: |
             const kind = String(context.payload.inputs?.kind || 'release').trim();
             const rawVersion = (context.payload.inputs?.version || '').trim();
@@ -147,6 +158,7 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ steps.branch.outputs.branch }}
+          token: ${{ secrets.REPO_ADMIN_TOKEN }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v6
@@ -203,7 +215,7 @@ jobs:
         id: pr
         uses: actions/github-script@v8
         with:
-          github-token: ${{ secrets.REPO_ADMIN_TOKEN != '' && secrets.REPO_ADMIN_TOKEN || github.token }}
+          github-token: ${{ secrets.REPO_ADMIN_TOKEN }}
           script: |
             const kind = String('${{ steps.branch.outputs.kind }}');
             const version = String('${{ steps.branch.outputs.version }}');

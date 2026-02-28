@@ -1,5 +1,6 @@
 import json
 import pathlib
+import re
 import sys
 from typing import Any
 
@@ -9,6 +10,9 @@ REPO_ROOT = pathlib.Path(__file__).resolve().parents[2]
 SETTINGS_FILE = REPO_ROOT / ".github" / "repository.settings.yml"
 RULESETS_DIR = REPO_ROOT / ".github" / "rulesets"
 OUT_RULESETS_DIR = REPO_ROOT / "ruleset_payloads"
+
+TOPIC_RE = re.compile(r"^[a-z0-9][a-z0-9-]{0,49}$")
+MAX_TOPICS = 20
 
 
 def write_json(path: pathlib.Path, data: Any) -> None:
@@ -52,8 +56,36 @@ def main() -> None:
                 topics = []
             if not isinstance(topics, list):
                 raise SystemExit("topics must be a list")
-            topics = [str(t).strip().lower() for t in topics if str(t).strip()]
-            write_json(REPO_ROOT / "topics.json", topics)
+            normalized = [str(t).strip().lower() for t in topics if str(t).strip()]
+
+            # GitHub topic constraints:
+            # - max 20 topics
+            # - lowercase letters/numbers/hyphens (50 chars max)
+            # Enforce this here to prevent workflow failures (HTTP 422).
+            seen: set[str] = set()
+            deduped: list[str] = []
+            invalid: list[str] = []
+            for topic in normalized:
+                if topic in seen:
+                    continue
+                if not TOPIC_RE.match(topic):
+                    invalid.append(topic)
+                    continue
+                seen.add(topic)
+                deduped.append(topic)
+
+            if invalid:
+                sys.stdout.write(
+                    f"WARNING: Skipping invalid GitHub topics (must match {TOPIC_RE.pattern}): {', '.join(invalid)}\n"
+                )
+
+            if len(deduped) > MAX_TOPICS:
+                sys.stdout.write(
+                    f"WARNING: Truncating topics list to {MAX_TOPICS} (was {len(deduped)}).\n"
+                )
+                deduped = deduped[:MAX_TOPICS]
+
+            write_json(REPO_ROOT / "topics.json", deduped)
 
         security = settings.get("security", {}) or {}
         if not isinstance(security, dict):
