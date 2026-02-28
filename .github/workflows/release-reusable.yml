@@ -120,6 +120,11 @@ jobs:
           jq --arg version "$VERSION" '.version = $version' staging/package/package.json > staging/package/package.json.tmp
           mv staging/package/package.json.tmp staging/package/package.json
 
+          # Capture package name for later steps (publish/deprecate/logging)
+          PACKAGE_NAME=$(jq -r '.name' staging/package/package.json)
+          echo "✅ Package name: $PACKAGE_NAME"
+          echo "PACKAGE_NAME=$PACKAGE_NAME" >> "$GITHUB_ENV"
+
           # Verify the version was updated
           UPDATED_VERSION=$(jq -r '.version' staging/package/package.json)
           echo "✅ Version in package.json is now: $UPDATED_VERSION"
@@ -129,8 +134,10 @@ jobs:
             exit 1
           fi
 
-          # Repack with clean version name
-          CLEAN_NAME="winccoa-tools-pack-npm-winccoa-core-${VERSION}.tgz"
+          # Repack with clean version name derived from npm package name
+          # Example: @scope/pkg -> scope-pkg
+          SAFE_NAME=$(echo "$PACKAGE_NAME" | sed -e 's/^@//' -e 's/[\/@]/-/g')
+          CLEAN_NAME="${SAFE_NAME}-${VERSION}.tgz"
           echo "📦 Repacking as: dist/$CLEAN_NAME"
           tar -czf "dist/$CLEAN_NAME" -C staging package
 
@@ -145,7 +152,7 @@ jobs:
 
       - name: "Publish to npm (dist-tag: latest)"
         # Skip NPM publish on forked repositories (no NPM_TOKEN available)
-        if: github.repository == 'winccoa-tools-pack/npm-winccoa-core'
+        if: github.repository_owner == 'winccoa-tools-pack'
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         shell: bash
@@ -180,13 +187,18 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Deprecate pre-release npm versions
-        if: github.repository == 'winccoa-tools-pack/npm-winccoa-core'
+        if: github.repository_owner == 'winccoa-tools-pack'
         shell: bash
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           VERSION="${{ needs.versioning.outputs.version }}"
-          PACKAGE="@winccoa-tools-pack/npm-winccoa-core"
+          PACKAGE="${PACKAGE_NAME}"
+
+          if [ -z "${PACKAGE:-}" ] || [ "${PACKAGE}" = "null" ]; then
+            echo "⚠️ PACKAGE_NAME not set; skipping npm deprecations"
+            exit 0
+          fi
 
           echo "🧹 Deprecating pre-release npm versions for $VERSION..."
 

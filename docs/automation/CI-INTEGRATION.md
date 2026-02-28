@@ -28,7 +28,7 @@ Workflow: `.github/workflows/ci-cd.yml` (job: `Integration Tests - WinCC OA`)
 - What it does:
   - pulls a WinCC OA Docker image
   - runs the repo inside the container
-  - executes `npm run ci:integration` (which runs `npm ci`, `npm run compile`, and `npm run test:integrationt`)
+  - executes `npm run ci:integration` (which runs `npm ci`, `npm run build`, and `npm run test:integration`)
 
 By default, the integration job is a no-op unless an image is configured.
 
@@ -73,7 +73,7 @@ From the Actions tab:
 
 ## Quick Links
 
-• [📦 npm package](https://www.npmjs.com/package/@winccoa-tools-pack/npm-winccoa-core)
+• [📦 npm package](https://www.npmjs.com/package/@winccoa-tools-pack/npm-winccoa-ui-pnl-xml)
 
 ---
 

@@ -36,21 +36,60 @@ npm install -g @winccoa-tools-pack/npm-winccoa-ui-pnl-xml
 ## 🖥 Usage (CLI)
 
 ```shell
-# Convert .pnl → .xml
-winccoa-pnl-xml convert pnl-to-xml path/to/panel.pnl -o out/panel.xml
+# Convert .pnl → .xml (in-place)
+winccoa-pnl-xml convert pnl-to-xml about.pnl --version 3.20
 
-# Convert .xml → .pnl
-winccoa-pnl-xml convert xml-to-pnl path/to/panel.xml -o out/panel.pnl
+# Convert .xml → .pnl (in-place)
+winccoa-pnl-xml convert xml-to-pnl about.xml --version 3.20
+
+# Optional flags
+#   --config <path>   Use a specific project config file
+#   --overwrite       Overwrite existing output files
+#   --timeout <ms>    Increase process timeout
 ```
+
+## ⚠️ Important behavior
+
+- Conversion is performed by WinCC OA `WCCOAui` and is **in-place** (the input file is rewritten).
+- WinCC OA may create a `.bak` file next to the input.
+- The input passed to `-p` is typically resolved relative to the project’s `panels/` directory.
+  Use `--config` if you need to point the converter at a specific project context.
 
 ## 🧩 Usage (API)
 
 ```typescript
 import { pnlToXml, xmlToPnl } from "@winccoa-tools-pack/npm-winccoa-ui-pnl-xml";
 
-const result = await pnlToXml("panel.pnl");
-console.log(result.output);
+// Note: WinCC OA performs the conversion in-place and may create a .bak backup.
+// The input path is typically resolved relative to the project’s panels/ directory.
+
+const pnlToXmlResult = await pnlToXml({
+  version: "3.20",
+  inputPath: "about.pnl",
+  // configPath: "C:/path/to/project/config/config",
+  // overwrite: true,
+  // timeout: 120_000,
+});
+
+if (!pnlToXmlResult.success) {
+  throw new Error(`Conversion failed (exit ${pnlToXmlResult.exitCode}): ${pnlToXmlResult.stderr}`);
+}
+
+const xmlToPnlResult = await xmlToPnl({
+  version: "3.20",
+  inputPath: "about.xml",
+});
+
+console.log({ pnlToXmlResult, xmlToPnlResult });
 ```
+
+More details: see [docs/USAGE.md](docs/USAGE.md).
+
+## 🩺 Troubleshooting
+
+- Non-zero exit code: inspect `stderr` and ensure `--version` matches your WinCC OA installation.
+- Timeouts on large panels: increase `--timeout` / `timeout`.
+- File not found: remember `inputPath` is usually relative to `panels/` in the active project context.
 
 ## 📚 Ecosystem Integration
 
