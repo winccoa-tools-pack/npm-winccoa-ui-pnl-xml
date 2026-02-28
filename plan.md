@@ -64,10 +64,29 @@ The tool will be part of the modular winccoa-tools-pack ecosystem.
    - Add file I/O handling
    - Implement error reporting
 
-3. **Phase 3: API Development**
-   - Create TypeScript API
-   - Add async support
-   - Documentation and examples
+3. **Phase 3: API Development** (done)
+    - Define a stable, typed public API surface
+       - `PnlXmlConverter` class with `convert(options, direction)`
+       - Convenience functions `pnlToXml(options)` and `xmlToPnl(options)` for the common directions
+       - Root exports from `src/index.ts` so consumers can `import { pnlToXml } from "..."`
+    - Provide TypeScript types that mirror runtime behavior
+       - `ConversionOptions` (required `version`, required `inputPath`, optional `configPath`, `overwrite`, `timeout`)
+       - `ConversionResult` (success flag, exit code, captured stdout/stderr, direction, inputPath)
+       - `ConversionDirection` enum values aligned with WinCC OA `-xmlConvert` flag (`XML` / `PNL`)
+    - Async/await support and predictable error behavior
+       - API returns `Promise<ConversionResult>`
+       - Default timeout (60s) with override via `options.timeout`
+       - Only throw on unexpected process/launcher errors; otherwise return a non-success `ConversionResult`
+    - Document important WinCC OA specifics in API docs
+       - Conversion is performed by `WCCOAui` using `-xmlConvert`
+       - Conversion happens **in-place** and may create `.bak` backups
+       - `inputPath` is resolved relative to the project’s `panels/` directory
+    - Add unit coverage for the API layer
+       - Verify convenience wrappers call the converter with the correct direction
+       - Verify return value shape and typing
+    - Update consumer documentation and examples
+       - README API example uses the real `ConversionOptions` shape
+       - README CLI example includes required `--version` and clarifies `--overwrite`
 
 4. **Phase 4: Integration and Testing**
    - VS Code extension integration

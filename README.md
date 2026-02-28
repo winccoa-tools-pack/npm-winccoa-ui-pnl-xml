@@ -36,11 +36,16 @@ npm install -g @winccoa-tools-pack/npm-winccoa-ui-pnl-xml
 ## 🖥 Usage (CLI)
 
 ```shell
-# Convert .pnl → .xml
-winccoa-pnl-xml convert pnl-to-xml path/to/panel.pnl -o out/panel.xml
+# Convert .pnl → .xml (in-place)
+winccoa-pnl-xml convert pnl-to-xml myPanel.pnl --version 3.20
 
-# Convert .xml → .pnl
-winccoa-pnl-xml convert xml-to-pnl path/to/panel.xml -o out/panel.pnl
+# Convert .xml → .pnl (in-place)
+winccoa-pnl-xml convert xml-to-pnl myPanel.xml --version 3.20
+
+# Optional flags
+#   --config <path>   Use a specific project config file
+#   --overwrite       Overwrite existing output files
+#   --timeout <ms>    Increase process timeout
 ```
 
 ## 🧩 Usage (API)
@@ -48,8 +53,27 @@ winccoa-pnl-xml convert xml-to-pnl path/to/panel.xml -o out/panel.pnl
 ```typescript
 import { pnlToXml, xmlToPnl } from "@winccoa-tools-pack/npm-winccoa-ui-pnl-xml";
 
-const result = await pnlToXml("panel.pnl");
-console.log(result.output);
+// Note: WinCC OA performs the conversion in-place and may create a .bak backup.
+// The input path is typically resolved relative to the project’s panels/ directory.
+
+const pnlToXmlResult = await pnlToXml({
+  version: "3.20",
+  inputPath: "about.pnl",
+  // configPath: "C:/path/to/project/config/config",
+  // overwrite: true,
+  // timeout: 120_000,
+});
+
+if (!pnlToXmlResult.success) {
+  throw new Error(`Conversion failed (exit ${pnlToXmlResult.exitCode}): ${pnlToXmlResult.stderr}`);
+}
+
+const xmlToPnlResult = await xmlToPnl({
+  version: "3.20",
+  inputPath: "about.xml",
+});
+
+console.log({ pnlToXmlResult, xmlToPnlResult });
 ```
 
 ## 📚 Ecosystem Integration
