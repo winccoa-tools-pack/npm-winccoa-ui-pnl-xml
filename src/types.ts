@@ -19,8 +19,11 @@ export interface ConversionOptions {
     version: string;
 
     /**
-     * Path to the panel file (.pnl) or XML file (.xml) to convert,
-     * or a directory to convert all panels within.
+     * Path to the panel file (.pnl) or directory to convert.
+     *
+     * WCCOAui resolves this path **relative to the project's `panels/`
+     * directory**, so typically a bare filename like `"about.pnl"` or a
+     * sub-path like `"sub/myPanel.pnl"` is expected — not an absolute path.
      */
     inputPath: string;
 
@@ -30,6 +33,13 @@ export interface ConversionOptions {
      * @default false
      */
     overwrite?: boolean;
+
+    /**
+     * Path to the WinCC OA project config file.
+     * Allows WCCOAui to locate a valid project context without registration.
+     * Maps to the `-config` flag of the UI manager.
+     */
+    configPath?: string;
 
     /**
      * Timeout in milliseconds for the conversion process.
