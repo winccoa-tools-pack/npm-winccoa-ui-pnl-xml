@@ -37,16 +37,23 @@ npm install -g @winccoa-tools-pack/npm-winccoa-ui-pnl-xml
 
 ```shell
 # Convert .pnl → .xml (in-place)
-winccoa-pnl-xml convert pnl-to-xml myPanel.pnl --version 3.20
+winccoa-pnl-xml convert pnl-to-xml about.pnl --version 3.20
 
 # Convert .xml → .pnl (in-place)
-winccoa-pnl-xml convert xml-to-pnl myPanel.xml --version 3.20
+winccoa-pnl-xml convert xml-to-pnl about.xml --version 3.20
 
 # Optional flags
 #   --config <path>   Use a specific project config file
 #   --overwrite       Overwrite existing output files
 #   --timeout <ms>    Increase process timeout
 ```
+
+## ⚠️ Important behavior
+
+- Conversion is performed by WinCC OA `WCCOAui` and is **in-place** (the input file is rewritten).
+- WinCC OA may create a `.bak` file next to the input.
+- The input passed to `-p` is typically resolved relative to the project’s `panels/` directory.
+  Use `--config` if you need to point the converter at a specific project context.
 
 ## 🧩 Usage (API)
 
@@ -75,6 +82,14 @@ const xmlToPnlResult = await xmlToPnl({
 
 console.log({ pnlToXmlResult, xmlToPnlResult });
 ```
+
+More details: see [docs/USAGE.md](docs/USAGE.md).
+
+## 🩺 Troubleshooting
+
+- Non-zero exit code: inspect `stderr` and ensure `--version` matches your WinCC OA installation.
+- Timeouts on large panels: increase `--timeout` / `timeout`.
+- File not found: remember `inputPath` is usually relative to `panels/` in the active project context.
 
 ## 📚 Ecosystem Integration
 

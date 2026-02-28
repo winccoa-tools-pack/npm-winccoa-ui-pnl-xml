@@ -1,6 +1,6 @@
 {
   "name": "@winccoa-tools-pack/npm-winccoa-ui-pnl-xml",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "description": "PNL ⇄ XML converter for WinCC OA UI panels",
   "author": "winccoa-tools-pack",
   "license": "MIT",
@@ -30,9 +30,6 @@
   "files": [
     "dist"
   ],
-  "bin": {
-    "winccoa-pnl-xml": "./dist/cjs/cli.js"
-  },
   "scripts": {
     "build:types": "tsc -p tsconfig.build.types.json",
     "build:cjs": "tsc -p tsconfig.build.cjs.json",
