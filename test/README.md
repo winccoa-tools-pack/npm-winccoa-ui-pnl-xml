@@ -1,6 +1,6 @@
 # Tests
 
-This directory contains unit tests and integration tests for the WinCC OA Core Library.
+This directory contains unit tests and integration tests for the WinCC OA UI PNL/XML Converter.
 
 ## Running Tests
 
@@ -23,7 +23,7 @@ We're excited to be part of your development journey. **Happy Coding! 🚀**
 
 ## Quick Links
 
-• [📦 npm package](https://www.npmjs.com/package/@winccoa-tools-pack/npm-winccoa-core)
+• [📦 npm package](https://www.npmjs.com/package/@winccoa-tools-pack/npm-winccoa-ui-pnl-xml)
 
 ---
 
