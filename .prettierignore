@@ -3,3 +3,5 @@ dist/
 **/*.lock
 tsconfig.tsbuildinfo
 .md
+.github/skills/
+apm_modules/
