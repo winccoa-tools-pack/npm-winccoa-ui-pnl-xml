@@ -31,6 +31,27 @@ if 'allowed_actions' in ap:
     out['allowed_actions'] = ap['allowed_actions']
 if isinstance(ap.get('selected_actions'), dict) and 'apps' in ap.get('selected_actions'):
     out['selected_actions'] = {'apps': ap['selected_actions']['apps']}
+written = False
+if out:
+    Path('actions_payload.json').write_text(json.dumps(out, ensure_ascii=False), encoding='utf-8')
+    print('WROTE actions_payload.json')
+    written = True
 
-Path('actions_payload.json').write_text(json.dumps(out, ensure_ascii=False), encoding='utf-8')
-print('WROTE actions_payload.json')
+# Optional: emit repository-level workflow permissions payload
+wp = cfg.get('workflow_permissions')
+if isinstance(wp, dict):
+    wout = {}
+    if 'default_workflow_permissions' in wp:
+        # expect 'read' or 'write'
+        wout['default_workflow_permissions'] = wp['default_workflow_permissions']
+    if 'can_approve_pull_request_reviews' in wp:
+        wout['can_approve_pull_request_reviews'] = bool(wp['can_approve_pull_request_reviews'])
+
+    if wout:
+        Path('workflow_payload.json').write_text(json.dumps(wout, ensure_ascii=False), encoding='utf-8')
+        print('WROTE workflow_payload.json')
+        written = True
+
+if not written:
+    # nothing emitted
+    sys.exit(0)
