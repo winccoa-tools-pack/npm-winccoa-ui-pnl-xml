@@ -3,7 +3,7 @@
   "name": "workflow_execution",
   "target": "actions",
   "source_type": "Repository",
-  "source": "winccoa-tools-pack/npm-winccoa-ui-pnl-xml",
+  "source": "winccoa-tools-pack/template-npm-shared-library",
   "enforcement": "active",
   "conditions": {},
   "rules": [],
